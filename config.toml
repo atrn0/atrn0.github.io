@@ -2,6 +2,7 @@ baseURL = "https://atrn0.github.io"
 languageCode = "ja-jp"
 title = "atrn0"
 theme = "hugo-theme-stack"
+publishDir = "docs"
 
 [permalinks]
     posts = "/p/:slug/"
