@@ -3,6 +3,7 @@ languageCode = "ja-jp"
 title = "atrn0"
 theme = "hugo-theme-stack"
 publishDir = "docs"
+enableEmoji = "true"
 
 [permalinks]
     posts = "/p/:slug/"
