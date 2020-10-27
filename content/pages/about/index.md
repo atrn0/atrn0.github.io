@@ -9,10 +9,13 @@ aliases: ["about"]
 tags: []
 ---
 
+## Me
 
 - :bust_in_silhouette: Arata Sato / 佐藤新太
 - :school: 京都大学工学部情報学科3回生
 - :round_pushpin: キョート or サッポロ
+
+TypeScriptかGoをよく書きます。最近はサーバーサイド、インフラに興味があります。
 
 ## Works
 
@@ -51,6 +54,12 @@ tags: *Vue, Vuex, TypeScript, Netlify*
 
 ![](mi.gif)
 
+## Internships
 
+- Weblio, Inc. (2019.05 - 2019.12)
+- teamLab (2019.09)
+- cookpad (2020.04)
+- mixi (2020.08 - 2020.09)
+- DeNA (2020.08)
 
  
