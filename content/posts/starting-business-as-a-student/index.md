@@ -1,10 +1,10 @@
 ---
 title: "学生起業して思ったこと"
 description: "学生起業して思ったことを書きます。"
-date: 2020-12-02T19:53:18+09:00
-lastmod: 2020-12-02T19:53:18+09:00
+date: 2020-12-10T00:00:00+09:00
+lastmod: 2020-12-10T00:00:00+09:00
 author: "atrn0"
-draft: true
+draft: false
 aliases: []
 tags: ["CAMPHOR- Advent Calendar", "life"]
 image: cover.jpg
