@@ -1,8 +1,8 @@
 ---
 title: "About"
-description: ""
+description: "About"
 date: 2020-10-14T23:41:20+09:00
-lastmod: 2020-10-14T23:41:20+09:00
+lastmod: 2021-04-107T00:00:00+09:00
 author: "atrn0"
 draft: false
 aliases: ["about"]
@@ -12,8 +12,8 @@ tags: []
 ## Me
 
 - :bust_in_silhouette: Arata Sato / 佐藤新太
-- :school: 京都大学工学部情報学科3回生
-- :round_pushpin: キョート or サッポロ
+- :school: 京都大学工学部情報学科4回生
+- :round_pushpin: 京都
 
 TypeScriptかGoをよく書きます。最近はサーバーサイド、インフラに興味があります。
 
@@ -61,5 +61,4 @@ tags: *Vue, Vuex, TypeScript, Netlify*
 - cookpad (2020.04)
 - mixi (2020.08 - 2020.09)
 - DeNA (2020.08)
-
- 
+- Wantedly (2021.02 - 2021.03)
