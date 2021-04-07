@@ -1,6 +1,6 @@
 ---
 title: "About"
-description: "About"
+description: ""
 date: 2020-10-14T23:41:20+09:00
 lastmod: 2021-04-107T00:00:00+09:00
 author: "atrn0"
