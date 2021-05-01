@@ -21,7 +21,7 @@ enableEmoji = "true"
     [params.sidebar]
         emoji = "🤔"
         avatar = "img/avatar.png"
-        subtitle = "CS Student. B3"
+        subtitle = "CS Student. B4"
         
     [params.article]
         math = true
