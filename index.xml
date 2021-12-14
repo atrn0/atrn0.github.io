@@ -1,4 +1,127 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>atrn0</title><link>https://atrn0.github.io/</link><description>Recent content on atrn0</description><generator>Hugo -- gohugo.io</generator><language>ja-jp</language><lastBuildDate>Thu, 10 Dec 2020 00:00:00 +0900</lastBuildDate><atom:link href="https://atrn0.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>学生起業して思ったこと</title><link>https://atrn0.github.io/p/starting-business-as-a-student/</link><pubDate>Thu, 10 Dec 2020 00:00:00 +0900</pubDate><guid>https://atrn0.github.io/p/starting-business-as-a-student/</guid><description>&lt;img src="https://atrn0.github.io/p/starting-business-as-a-student/cover.jpg" alt="Featured image of post 学生起業して思ったこと" />&lt;p>この記事は、&lt;a class="link" href="https://advent.camph.net/" target="_blank" rel="noopener"
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>atrn0</title><link>https://atrn0.github.io/</link><description>Recent content on atrn0</description><generator>Hugo -- gohugo.io</generator><language>ja-jp</language><lastBuildDate>Wed, 15 Dec 2021 00:00:00 +0900</lastBuildDate><atom:link href="https://atrn0.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>自作ラムダ計算インタプリタで階乗を計算する</title><link>https://atrn0.github.io/p/%E8%87%AA%E4%BD%9C%E3%83%A9%E3%83%A0%E3%83%80%E8%A8%88%E7%AE%97%E3%82%A4%E3%83%B3%E3%82%BF%E3%83%97%E3%83%AA%E3%82%BF%E3%81%A7%E9%9A%8E%E4%B9%97%E3%82%92%E8%A8%88%E7%AE%97%E3%81%99%E3%82%8B/</link><pubDate>Wed, 15 Dec 2021 00:00:00 +0900</pubDate><guid>https://atrn0.github.io/p/%E8%87%AA%E4%BD%9C%E3%83%A9%E3%83%A0%E3%83%80%E8%A8%88%E7%AE%97%E3%82%A4%E3%83%B3%E3%82%BF%E3%83%97%E3%83%AA%E3%82%BF%E3%81%A7%E9%9A%8E%E4%B9%97%E3%82%92%E8%A8%88%E7%AE%97%E3%81%99%E3%82%8B/</guid><description>&lt;p>この記事は、&lt;a class="link" href="https://advent.camph.net/" target="_blank" rel="noopener"
+>CAMPHOR- Advent Calendar 2021&lt;/a> の15日目の記事です。&lt;/p>
+&lt;p>ラムダ計算とは、関数定義と関数の適用からなるプログラミング言語で、チューリング完全な計算モデルです。以前ラムダ計算のインタプリタをOCamlで実装しました。この記事ではそのインタプリタでnの階乗を求めるまでの道のりを書きます。&lt;/p>
+&lt;p>実装したインタプリタは以下にあります。&lt;/p>
+&lt;p>&lt;a href="https://github.com/atrn0/lambda">https://github.com/atrn0/lambda&lt;/a>&lt;/p>
+&lt;h2 id="動機">動機&lt;/h2>
+&lt;p>僕が所属している研究室では、B4の前期に&lt;a class="link" href="https://www.cis.upenn.edu/~bcpierce/tapl/" target="_blank" rel="noopener"
+>Types and Programming Languages&lt;/a>の輪読と数学演習、OCamlとCoqの演習をやります。OCaml演習では基本的にB3でやるインタプリタ実験の続きをやります。&lt;/p>
+&lt;blockquote>
+&lt;p>OCaml 演習は，実験3SWの続きをやってみてください． &amp;hellip; あとは，OCaml で面白いソフトウェア（できれば言語処理系？）を実装してみるのもよいかもしれません．&lt;/p>
+&lt;/blockquote>
+&lt;p>プログラミング言語処理系という授業を落として再履修していた僕は、この授業の課題としてインタプリタ実験の続きはどうせやるので、「面白いソフトウェア（できれば言語処理系？）」も実装することにしました。題材の言語は、TaPLの輪講でちょうど読んでいて、性質が面白いかつ処理系の実装が簡単そうな型無しラムダ計算を選びました。&lt;/p>
+&lt;h2 id="型無しラムダ計算">(型無し)ラムダ計算&lt;/h2>
+&lt;p>複雑なプログラミング言語が、その本質的な仕組みを表現できる核となる計算モデルと、その核に変換される派生形式の集まりとして定式化できるという考え方があります。その一つの計算モデルがラムダ計算で、Lisp, Scheme, MLなどの言語の核となる計算モデルです。他にも$\pi$計算やオブジェクト計算などの計算モデルがあり、それぞれメッセージベースの並行処理言語、オブジェクト指向言語の核となる機能を持っています。これらの計算モデルはそれ自体で計算が記述できる単純なプログラミング言語であるのと同時に、数学的対象としてもみなせるので、一般的なプログラミング言語の仕様の記述や、設計、実装、研究において広く使われています。&lt;/p>
+&lt;p>ラムダ計算では全ての計算が関数の定義と適用に帰着されます。実装したインタプリタで扱える型無しラムダ計算の文法と意味論(プログラムがどう評価されるか)を見ていきます。&lt;/p>
+&lt;h3 id="文法シンタックス">文法(シンタックス)&lt;/h3>
+&lt;p>プログラムの文法は以下です。&lt;/p>
+&lt;pre>&lt;code>t ::=
+| x (変数)
+| \x. t (関数定義)
+| t t (関数適用)
+&lt;/code>&lt;/pre>&lt;p>これはBNF風の記法で書いていて、&lt;code>t&lt;/code>は&lt;code>x&lt;/code>または&lt;code>\x. t&lt;/code>または&lt;code>t t&lt;/code>であるという意味です。右辺の&lt;code>t&lt;/code>は左辺の&lt;code>t&lt;/code>で、関数定義の&lt;code>x&lt;/code>は任意の変数で置き換えることができます。それと、カッコは適当につけることができます。&lt;/p>
+&lt;p>例えば、以下のようなプログラムが許容されます。&lt;/p>
+&lt;ul>
+&lt;li>&lt;code>y&lt;/code>: 1つの変数y&lt;/li>
+&lt;li>&lt;code>\y. y&lt;/code>: yを引数として受け取り、yを返す関数(恒等関数)&lt;/li>
+&lt;li>&lt;code>f x&lt;/code>: 引数xを関数fに適用する&lt;/li>
+&lt;li>&lt;code>\x. f x&lt;/code>: xを引数として受け取り、fに適用して返す関数&lt;/li>
+&lt;li>&lt;code>\x. (\x. x) x&lt;/code>: xを引数として受け取り、恒等関数に適用して返す関数&lt;/li>
+&lt;/ul>
+&lt;p>このように、基本的に関数の定義と適用のみを使ってプログラムを書きます。&lt;/p>
+&lt;p>また、関数適用は左結合で、関数適用は関数定義より優先されます。つまり、&lt;/p>
+&lt;ul>
+&lt;li>&lt;code>x y z&lt;/code>というプログラムは&lt;code>(x y) z&lt;/code>と等価 (左結合)&lt;/li>
+&lt;li>&lt;code>\x. y z&lt;/code>というプログラムは&lt;code>(\x. y) z&lt;/code>ではなく&lt;code>\x. (y z)&lt;/code>と等価 (関数適用を優先)&lt;/li>
+&lt;/ul>
+&lt;p>とします。&lt;/p>
+&lt;h3 id="意味論セマンティクス">意味論(セマンティクス)&lt;/h3>
+&lt;p>次に、プログラムとして入力した文字列がインタプリタにどのように評価(解釈)されるかを決める必要があります。&lt;/p>
+&lt;p>ラムダ計算では、「&lt;code>(\x. s) t&lt;/code> という形が来たら、sの中に出てくるxをtで置き換える」(ベータ簡約) という方針でプログラムを変換します。この変換によってプログラムが評価、計算されます。例えば、プログラムは以下のように変換されます。&lt;/p>
+&lt;p>(\x.x) (&lt;strong>(\x.x) (\z. (\x.x) z)&lt;/strong>)&lt;br>
+→ &lt;strong>(\x. x) (\z. ((\x. x) z))&lt;/strong>&lt;br>
+→ \z. (&lt;strong>(\x. x) z&lt;/strong>)&lt;br>
+→ \z. z&lt;/p>
+&lt;p>実装したインタプリタでは、&lt;code>(\x. s) t&lt;/code> という形がなくなるまでこの操作を繰り返すことにします。&lt;/p>
+&lt;h2 id="計算の例">計算の例&lt;/h2>
+&lt;p>ここまででプログラミング言語を定義することができました。この言語を使って早速プログラムを書いて実行したいところですが、この言語には数値、算術演算、条件式、レコード、ループ、列など、一般的な言語に備わっていそうな機能は何もありません🥺。ないものは仕方ないので、今の言語機能でなんとかすることにします。&lt;/p>
+&lt;p>とりあえずnの階乗を求めることを目標にします。nの階乗を求める関数は、例えばCだと以下のように書けます。&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-c" data-lang="c">&lt;span class="kt">int&lt;/span> &lt;span class="nf">f&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="kt">int&lt;/span> &lt;span class="n">n&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="k">return&lt;/span> &lt;span class="n">n&lt;/span> &lt;span class="o">==&lt;/span> &lt;span class="mi">0&lt;/span> &lt;span class="o">?&lt;/span> &lt;span class="mi">1&lt;/span> &lt;span class="o">:&lt;/span> &lt;span class="n">f&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">n&lt;/span> &lt;span class="o">-&lt;/span> &lt;span class="mi">1&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="o">*&lt;/span> &lt;span class="n">n&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>nの階乗を求めるために必要そうな要素は、&lt;/p>
+&lt;ul>
+&lt;li>条件分岐&lt;/li>
+&lt;li>数&lt;/li>
+&lt;li>乗算&lt;/li>
+&lt;li>再帰演算&lt;/li>
+&lt;/ul>
+&lt;p>などです。1つずつ作っていきます。&lt;/p>
+&lt;h3 id="条件分岐">条件分岐&lt;/h3>
+&lt;p>まず、条件分岐をするためにブール値が欲しいです。&lt;code>true&lt;/code>や&lt;code>false&lt;/code>というプリミティブな定数はないので、代わりにこれらを関数にエンコードします。&lt;/p>
+&lt;pre>&lt;code>true = \t. \f. t
+false = \t. \f. f
+&lt;/code>&lt;/pre>&lt;p>&lt;code>true&lt;/code>は2つの引数を受け取って1つ目の引数を返す関数、&lt;code>false&lt;/code>は2つ目の引数を返す関数です。(複数引数の関数はカリー化によって高階関数に変換します。) このようにエンコードすると、条件分岐は以下のように書けます。&lt;/p>
+&lt;pre>&lt;code>test = \l. \m. \n. l m n
+&lt;/code>&lt;/pre>&lt;p>&lt;code>test&lt;/code>は3つの引数l, m, nを受け取って、lが&lt;code>true&lt;/code>のときmを、&lt;code>false&lt;/code>のときnを返す関数です。&lt;/p>
+&lt;p>例えば、&lt;code>test true x y&lt;/code>というプログラムは、&lt;/p>
+&lt;p>= &lt;strong>(\l. \m. \n. l m n) (\t. \f. t)&lt;/strong> x y&lt;br>
+→ &lt;strong>(\m. \n. (\t. \f. t) m n) x&lt;/strong> y&lt;br>
+→ &lt;strong>(\n. (\t. \f. t) x n) y&lt;/strong>&lt;br>
+→ (&lt;strong>(\t. \f. t) x&lt;/strong>) y&lt;br>
+→ &lt;strong>(\f. x) y&lt;/strong>&lt;br>
+→ x&lt;/p>
+&lt;p>と評価され、確かにxになります。&lt;/p>
+&lt;h3 id="数">数&lt;/h3>
+&lt;p>次に数をエンコードします。&lt;/p>
+&lt;pre>&lt;code>0 = \s. \z. z
+1 = \s. \z. s z
+2 = \s. \z. s (s z)
+3 = \s. \z. s (s (s z))
+...
+&lt;/code>&lt;/pre>&lt;p>このように、自然数nは2つの引数s, zを受け取り、sをzにn回適用する関数として表します。このエンコード方法はチャーチ数と呼ばれます。&lt;/p>
+&lt;p>この数を使うと、例えば加算、乗算は&lt;/p>
+&lt;pre>&lt;code>plus = \m. \n. \s. \z. m s (n s z)
+times = \m. \n. m (plus n) 0
+&lt;/code>&lt;/pre>&lt;p>と書けます。&lt;/p>
+&lt;h3 id="再帰演算">再帰演算&lt;/h3>
+&lt;p>再帰演算は不動点コンビネータと呼ばれる関数を使って行います。不動点コンビネータとは、ラムダ計算の過程で&lt;code>fix g → g (fix g)&lt;/code>と変換されるような関数&lt;code>fix&lt;/code>のことです。&lt;/p>
+&lt;p>例えば、&lt;code>f = \n. f n&lt;/code>のような再帰関数を使った演算は、引数に&lt;code>f&lt;/code>をとる関数gを使って以下のように行うことができます。&lt;/p>
+&lt;pre>&lt;code>g = \f. \n. f n
+(fix g) i
+→ g (fix g) i
+= (\f. \n. f n) (fix g) i
+→ (\n. (fix g) n) i
+...
+&lt;/code>&lt;/pre>&lt;p>このように、&lt;code>(fix g)&lt;/code>が再帰的に関数内に現れるように変換できます。&lt;/p>
+&lt;h3 id="階乗の計算">階乗の計算&lt;/h3>
+&lt;p>以上のように、一般的な言語に備わっている機能をラムダ計算にエンコードすることができます。実装したインタプリタでは、階乗の計算を行うために以下のようなマクロを定義しています。&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-ocaml" data-lang="ocaml">&lt;span class="k">let&lt;/span> &lt;span class="n">initial_env&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="nn">Environment&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">from_list&lt;/span> &lt;span class="o">[&lt;/span>
+&lt;span class="o">(&lt;/span>&lt;span class="s2">&amp;#34;test&amp;#34;&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">parse&lt;/span> &lt;span class="s2">&amp;#34;λl. λm. λn. l m n&amp;#34;&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="o">(&lt;/span>&lt;span class="s2">&amp;#34;tru&amp;#34;&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">parse&lt;/span> &lt;span class="s2">&amp;#34;λt. λf. t&amp;#34;&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="o">(&lt;/span>&lt;span class="s2">&amp;#34;fls&amp;#34;&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">parse&lt;/span> &lt;span class="s2">&amp;#34;λt. λf. f&amp;#34;&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="o">(&lt;/span>&lt;span class="s2">&amp;#34;iszro&amp;#34;&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">parse&lt;/span> &lt;span class="s2">&amp;#34;λm. m (λx. fls) tru&amp;#34;&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="o">(&lt;/span>&lt;span class="s2">&amp;#34;c0&amp;#34;&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">parse&lt;/span> &lt;span class="s2">&amp;#34;λs. λz. z&amp;#34;&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="o">(&lt;/span>&lt;span class="s2">&amp;#34;c1&amp;#34;&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">parse&lt;/span> &lt;span class="s2">&amp;#34;λs. λz. s z&amp;#34;&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="o">(&lt;/span>&lt;span class="s2">&amp;#34;plus&amp;#34;&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">parse&lt;/span> &lt;span class="s2">&amp;#34;λm. λn. λs. λz. m s (n s z)&amp;#34;&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="o">(&lt;/span>&lt;span class="s2">&amp;#34;times&amp;#34;&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">parse&lt;/span> &lt;span class="s2">&amp;#34;λm. λn. m (plus n) c0&amp;#34;&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="o">(&lt;/span>&lt;span class="s2">&amp;#34;pair&amp;#34;&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">parse&lt;/span> &lt;span class="s2">&amp;#34;λf. λs. λb. b f s&amp;#34;&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="o">(&lt;/span>&lt;span class="s2">&amp;#34;fst&amp;#34;&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">parse&lt;/span> &lt;span class="s2">&amp;#34;λp. p tru&amp;#34;&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="o">(&lt;/span>&lt;span class="s2">&amp;#34;snd&amp;#34;&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">parse&lt;/span> &lt;span class="s2">&amp;#34;λp. p fls&amp;#34;&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="o">(&lt;/span>&lt;span class="s2">&amp;#34;prd&amp;#34;&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">parse&lt;/span> &lt;span class="s2">&amp;#34;λm. fst (m (λp. pair (snd p) (plus c1 (snd p))) (pair c0 c0))&amp;#34;&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="o">(&lt;/span>&lt;span class="s2">&amp;#34;fix&amp;#34;&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">parse&lt;/span> &lt;span class="s2">&amp;#34;λf. (λx. f (λy. x x y)) (λx. f (λy. x x y))&amp;#34;&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="o">(&lt;/span>&lt;span class="s2">&amp;#34;factorial&amp;#34;&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">parse&lt;/span> &lt;span class="s2">&amp;#34;fix (λf. λn. test (iszro n) (λx. c1) (λx. (times n (f (prd n)))) c0)&amp;#34;&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="o">]&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;code>factorial&lt;/code>が階乗を計算する関数です。&lt;code>factorial&lt;/code>の中身を見てみると、不動点コンビネータ&lt;code>fix&lt;/code>を用いて&lt;code>f&lt;/code>が関数内で再帰的に使える構造になっていることがわかります。まず&lt;code>test&lt;/code>を用いてnが0かどうか(&lt;code>iszro n&lt;/code>)で条件分岐しています。nが0の場合は&lt;code>λx. c1&lt;/code>が、そうでない場合は&lt;code>λx. (times n (f (prd n)))) c0&lt;/code>が計算結果になります。後者の場合は&lt;code>times&lt;/code>を用いて&lt;code>n&lt;/code>と、&lt;code>prd n&lt;/code> (n - 1) を&lt;code>f&lt;/code>に適用した数の積が計算されます。&lt;/p>
+&lt;p>例えば4の階乗を求めるためには次のようなプログラムを実行します。&lt;/p>
+&lt;pre>&lt;code># factorial (times (scc c1) (scc c1))
+→ (λs. (λz. (s (s (s (s (s (s (s (s (s (s (s (s (s (s (s (s (s (s (s (s (s (s (s (s z))))))))))))))))))))))))))
+&lt;/code>&lt;/pre>&lt;p>sが24個並んでいるので、無事4の階乗を求めることができました🎉&lt;/p>
+&lt;p>因みに、インタプリタにはverboseモードがあり、プログラムが変換される様子をみることができます。&lt;/p>
+&lt;p>&lt;a class="link" href="https://gyazo.com/3ba78b4d753b025e02e8ff712f2485e3" target="_blank" rel="noopener"
+>&lt;img src="https://i.gyazo.com/3ba78b4d753b025e02e8ff712f2485e3.gif" alt="Image from Gyazo" />&lt;/a>&lt;/p>
+&lt;h2 id="さいごに">さいごに&lt;/h2>
+&lt;p>インタプリタの解説というよりラムダ計算の説明が大部分になってしまいましたが、単純な計算体系で実用的な計算ができるという面白さが伝わっていたら幸いです。&lt;/p></description></item><item><title>学生起業して思ったこと</title><link>https://atrn0.github.io/p/starting-business-as-a-student/</link><pubDate>Thu, 10 Dec 2020 00:00:00 +0900</pubDate><guid>https://atrn0.github.io/p/starting-business-as-a-student/</guid><description>&lt;img src="https://atrn0.github.io/p/starting-business-as-a-student/cover.jpg" alt="Featured image of post 学生起業して思ったこと" />&lt;p>この記事は、&lt;a class="link" href="https://advent.camph.net/" target="_blank" rel="noopener"
 >CAMPHOR- Advent Calendar 2020&lt;/a> の10日目の記事です。&lt;/p>
 &lt;p>こんにちは、&lt;a class="link" href="https://atrn0.github.io/about" >あたらん&lt;/a>です。大学では情報学を学んでいます。&lt;/p>
 &lt;h2 id="何をしていたのか">何をしていたのか&lt;/h2>

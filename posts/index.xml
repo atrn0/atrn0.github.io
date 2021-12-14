@@ -1,4 +1,18 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on atrn0</title><link>https://atrn0.github.io/posts/</link><description>Recent content in Posts on atrn0</description><generator>Hugo -- gohugo.io</generator><language>ja-jp</language><lastBuildDate>Thu, 10 Dec 2020 00:00:00 +0900</lastBuildDate><atom:link href="https://atrn0.github.io/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>学生起業して思ったこと</title><link>https://atrn0.github.io/p/starting-business-as-a-student/</link><pubDate>Thu, 10 Dec 2020 00:00:00 +0900</pubDate><guid>https://atrn0.github.io/p/starting-business-as-a-student/</guid><description>この記事は、CAMPHOR- Advent Calendar 2020 の10日目の記事です。
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on atrn0</title><link>https://atrn0.github.io/posts/</link><description>Recent content in Posts on atrn0</description><generator>Hugo -- gohugo.io</generator><language>ja-jp</language><lastBuildDate>Wed, 15 Dec 2021 00:00:00 +0900</lastBuildDate><atom:link href="https://atrn0.github.io/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>自作ラムダ計算インタプリタで階乗を計算する</title><link>https://atrn0.github.io/p/%E8%87%AA%E4%BD%9C%E3%83%A9%E3%83%A0%E3%83%80%E8%A8%88%E7%AE%97%E3%82%A4%E3%83%B3%E3%82%BF%E3%83%97%E3%83%AA%E3%82%BF%E3%81%A7%E9%9A%8E%E4%B9%97%E3%82%92%E8%A8%88%E7%AE%97%E3%81%99%E3%82%8B/</link><pubDate>Wed, 15 Dec 2021 00:00:00 +0900</pubDate><guid>https://atrn0.github.io/p/%E8%87%AA%E4%BD%9C%E3%83%A9%E3%83%A0%E3%83%80%E8%A8%88%E7%AE%97%E3%82%A4%E3%83%B3%E3%82%BF%E3%83%97%E3%83%AA%E3%82%BF%E3%81%A7%E9%9A%8E%E4%B9%97%E3%82%92%E8%A8%88%E7%AE%97%E3%81%99%E3%82%8B/</guid><description>この記事は、CAMPHOR- Advent Calendar 2021 の15日目の記事です。
+ラムダ計算とは、関数定義と関数の適用からなるプログラミング言語で、チューリング完全な計算モデルです。以前ラムダ計算のインタプリタをOCamlで実装しました。この記事ではそのインタプリタでnの階乗を求めるまでの道のりを書きます。
+実装したインタプリタは以下にあります。
+https://github.com/atrn0/lambda
+動機 僕が所属している研究室では、B4の前期にTypes and Programming Languagesの輪読と数学演習、OCamlとCoqの演習をやります。OCaml演習では基本的にB3でやるインタプリタ実験の続きをやります。
+OCaml 演習は，実験3SWの続きをやってみてください． &amp;hellip; あとは，OCaml で面白いソフトウェア（できれば言語処理系？）を実装してみるのもよいかもしれません．
+プログラミング言語処理系という授業を落として再履修していた僕は、この授業の課題としてインタプリタ実験の続きはどうせやるので、「面白いソフトウェア（できれば言語処理系？）」も実装することにしました。題材の言語は、TaPLの輪講でちょうど読んでいて、性質が面白いかつ処理系の実装が簡単そうな型無しラムダ計算を選びました。
+(型無し)ラムダ計算 複雑なプログラミング言語が、その本質的な仕組みを表現できる核となる計算モデルと、その核に変換される派生形式の集まりとして定式化できるという考え方があります。その一つの計算モデルがラムダ計算で、Lisp, Scheme, MLなどの言語の核となる計算モデルです。他にも$\pi$計算やオブジェクト計算などの計算モデルがあり、それぞれメッセージベースの並行処理言語、オブジェクト指向言語の核となる機能を持っています。これらの計算モデルはそれ自体で計算が記述できる単純なプログラミング言語であるのと同時に、数学的対象としてもみなせるので、一般的なプログラミング言語の仕様の記述や、設計、実装、研究において広く使われています。
+ラムダ計算では全ての計算が関数の定義と適用に帰着されます。実装したインタプリタで扱える型無しラムダ計算の文法と意味論(プログラムがどう評価されるか)を見ていきます。
+文法(シンタックス) プログラムの文法は以下です。
+t ::= | x (変数) | \x. t (関数定義) | t t (関数適用) これはBNF風の記法で書いていて、tはxまたは\x. tまたはt tであるという意味です。右辺のtは左辺のtで、関数定義のxは任意の変数で置き換えることができます。それと、カッコは適当につけることができます。
+例えば、以下のようなプログラムが許容されます。
+y: 1つの変数y \y. y: yを引数として受け取り、yを返す関数(恒等関数) f x: 引数xを関数fに適用する \x. f x: xを引数として受け取り、fに適用して返す関数 \x. (\x. x) x: xを引数として受け取り、恒等関数に適用して返す関数 このように、基本的に関数の定義と適用のみを使ってプログラムを書きます。
+また、関数適用は左結合で、関数適用は関数定義より優先されます。つまり、
+x y zというプログラムは(x y) zと等価 (左結合) \x.</description></item><item><title>学生起業して思ったこと</title><link>https://atrn0.github.io/p/starting-business-as-a-student/</link><pubDate>Thu, 10 Dec 2020 00:00:00 +0900</pubDate><guid>https://atrn0.github.io/p/starting-business-as-a-student/</guid><description>この記事は、CAMPHOR- Advent Calendar 2020 の10日目の記事です。
 こんにちは、あたらんです。大学では情報学を学んでいます。
 何をしていたのか 5月から9月まで、札幌ToGoという札幌でテイクアウトを予約してオンライン決済できるサービスを運営していました。4月に高校の友人に誘われて開発に参加しました。営業していたレストランの関係から5月の初めにリリースすることが決まっていましたが、僕が参加したときは要件や仕様すらしっかり決まっておらず、なかなかに炎上プロジェクトでした。が、ビジネスとして0からサービスを開発したことがなかったこともあって、「やりきったらインターンの選考とかでアピールできそう」という軽い気持ちで参加することにしました。
 サービスの概要
