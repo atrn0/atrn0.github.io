@@ -6,7 +6,8 @@ lastmod: 2021-12-15T00:00:00+09:00
 author: "atrn0"
 draft: false
 aliases: []
-tags: []
+tags: ["CAMPHOR- Advent Calendar"]
+slug: lambda-interpreter
 ---
 
 この記事は、[CAMPHOR- Advent Calendar 2021](https://advent.camph.net/) の15日目の記事です。
