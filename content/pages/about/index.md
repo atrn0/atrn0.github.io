@@ -11,11 +11,7 @@ tags: []
 
 ## Me
 
-- :bust_in_silhouette: Arata Sato / 佐藤新太
-- :school: 京都大学工学部情報学科4回生
-- :round_pushpin: 京都
-
-TypeScriptかGoをよく書きます。最近はサーバーサイド、インフラに興味があります。
+- :bust_in_silhouette: Arata Sato / 佐藤 新太
 
 ## Works
 
