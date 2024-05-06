@@ -54,6 +54,9 @@ const config: Config = {
         { to: "/misc", label: "Misc", position: "right" },
       ],
     },
+    colorMode: {
+      respectPrefersColorScheme: true,
+    },
     prism: {
       theme: prismThemes.github,
       darkTheme: prismThemes.dracula,
