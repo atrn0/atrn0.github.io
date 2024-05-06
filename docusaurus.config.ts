@@ -10,6 +10,7 @@ const config: Config = {
   baseUrl: "/",
   organizationName: "atrn0", // Usually your GitHub org/user name.
   projectName: "atrn0.github.io", // Usually your repo name.
+  trailingSlash: false,
   onBrokenLinks: "throw",
   onBrokenMarkdownLinks: "warn",
   i18n: {
@@ -30,6 +31,7 @@ const config: Config = {
           editUrl: "https://github.com/atrn0/atrn0.github.io",
           showLastUpdateAuthor: false,
           routeBasePath: "p",
+          feedOptions: { type: "all" },
         },
         theme: {
           customCss: "./src/css/custom.css",
