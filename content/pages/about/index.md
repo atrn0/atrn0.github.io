@@ -15,13 +15,13 @@ tags: []
 
 ## Works
 
-### 札幌ToGo
+### 札幌 ToGo
 
 2020.05 - 2020.09
 
-札幌でテイクアウトを予約、オンライン決済できるサービスを友人と開発しました。サーバーサイドを一人で担当しました。
+札幌でテイクアウトを予約、オンライン決済できるサービスを友人と開発しました。サーバーサイドを担当しました。
 
-tags: *Node.js, TypeScript, AWS, Firebase, Sentry, PostgreSQL, React*
+tags: _Node.js, TypeScript, AWS, Firebase, Sentry, PostgreSQL, React_
 
 ![](sapporotogo.jpg)
 
@@ -29,13 +29,13 @@ tags: *Node.js, TypeScript, AWS, Firebase, Sentry, PostgreSQL, React*
 
 2019 -
 
-BGMをその場にいる人が投稿によって決めるWebアプリの開発に参加しました。SpotifyのAPIを使っています。フロントエンドを担当しました。
+BGM をその場にいる人が投稿によって決める Web アプリの開発に参加しました。Spotify の API を使っています。フロントエンドを担当しました。
 
 - [Relaym](https://relaym.camph.net/)
 - [relaym-client](https://github.com/camphor-/relaym-client)
 - [relaym-server](https://github.com/camphor-/relaym-server)
 
-tags: *Vue, Vuex, TypeScript, Netlify*
+tags: _Vue, Vuex, TypeScript, Netlify_
 
 {{< vimeo 384682599 >}}
 
@@ -43,7 +43,7 @@ tags: *Vue, Vuex, TypeScript, Netlify*
 
 2019.03
 
-メッセージをインベーダーゲームにして共有できるWebアプリ。p5.jsで作りました。Firebaseでホストしています。
+メッセージをインベーダーゲームにして共有できる Web アプリ。p5.js で作りました。Firebase でホストしています。
 
 - [Message Invaders](https://mi.ataran.me/)
 - [atrn0/message-invaders](https://github.com/atrn0/message-invaders)
