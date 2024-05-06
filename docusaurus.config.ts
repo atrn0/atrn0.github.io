@@ -47,6 +47,7 @@ const config: Config = {
       logo: {
         alt: "Arata Sato",
         src: "atrn0.svg",
+        style: { borderRadius: "50%" },
       },
       items: [
         { to: "/p", label: "Articles", position: "left" },
