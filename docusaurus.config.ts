@@ -46,7 +46,7 @@ const config: Config = {
       title: "Arata Sato",
       logo: {
         alt: "Arata Sato",
-        src: "img/avatar.png",
+        src: "atrn0.svg",
       },
       items: [
         { to: "/p", label: "Articles", position: "left" },
