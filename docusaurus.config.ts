@@ -23,12 +23,12 @@ const config: Config = {
       {
         docs: {
           sidebarPath: "./sidebars.ts",
-          editUrl: "https://github.com/atrn0/atrn0.github.io",
+          editUrl: "https://github.com/atrn0/atrn0.github.io/edit/main",
           routeBasePath: "/",
         },
         blog: {
           showReadingTime: true,
-          editUrl: "https://github.com/atrn0/atrn0.github.io",
+          editUrl: "https://github.com/atrn0/atrn0.github.io/edit/main",
           showLastUpdateAuthor: false,
           routeBasePath: "p",
           feedOptions: { type: "all" },
