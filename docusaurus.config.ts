@@ -25,6 +25,7 @@ const config: Config = {
           sidebarPath: "./sidebars.ts",
           editUrl: "https://github.com/atrn0/atrn0.github.io/edit/main",
           routeBasePath: "/",
+          showLastUpdateTime: true,
         },
         blog: {
           showReadingTime: true,
@@ -32,6 +33,7 @@ const config: Config = {
           showLastUpdateAuthor: false,
           routeBasePath: "p",
           feedOptions: { type: "all" },
+          showLastUpdateTime: true,
         },
         theme: {
           customCss: "./src/css/custom.css",

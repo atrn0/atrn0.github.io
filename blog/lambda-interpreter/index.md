@@ -2,7 +2,6 @@
 title: "自作ラムダ計算インタプリタで階乗を計算する"
 description: ""
 date: 2021-12-15T00:00:00+09:00
-lastmod: 2021-12-15T00:00:00+09:00
 draft: false
 aliases: []
 tags: ["CAMPHOR- Advent Calendar"]
