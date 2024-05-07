@@ -53,7 +53,7 @@ const config: Config = {
       },
       items: [
         { to: "/p", label: "Articles", position: "left" },
-        { to: "/misc", label: "Misc", position: "right" },
+        { to: "/memo", label: "Memo", position: "right" },
       ],
     },
     colorMode: {
