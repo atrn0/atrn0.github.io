@@ -35,7 +35,9 @@ https://github.com/rui314/chibicc/commit/aedbf56c3af4914e3f183223ff879734683bec7
 ```
 
 [データ構造アライメント - Wikipedia](https://ja.wikipedia.org/wiki/%E3%83%87%E3%83%BC%E3%82%BF%E6%A7%8B%E9%80%A0%E3%82%A2%E3%83%A9%E3%82%A4%E3%83%A1%E3%83%B3%E3%83%88)
+
 [メモリアドレス - Wikipedia](https://ja.wikipedia.org/wiki/%E3%83%A1%E3%83%A2%E3%83%AA%E3%82%A2%E3%83%89%E3%83%AC%E3%82%B9)
+
 [バイトマシン - Wikipedia](https://ja.wikipedia.org/wiki/%E3%83%90%E3%82%A4%E3%83%88%E3%83%9E%E3%82%B7%E3%83%B3)
 
 > メモリアドレス a は、a が n バイトの倍数（n は 2 の累乗）であるときに、「n バイトアライメント」と呼ばれる。
