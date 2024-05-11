@@ -76,3 +76,169 @@ rsp が指すメモリアドレスが 16 バイトの倍数である必要があ
 cf.
 
 - [x86-64 機械語入門](https://zenn.dev/mod_poppo/articles/x86-64-machine-code#add%E5%91%BD%E4%BB%A4)
+
+## ステップ 15
+
+- [低レイヤを知りたい人のための C コンパイラ作成入門 - ステップ 15: 関数の定義に対応する](https://www.sigbus.info/compilerbook#%E3%82%B9%E3%83%86%E3%83%83%E3%83%9715-%E9%96%A2%E6%95%B0%E3%81%AE%E5%AE%9A%E7%BE%A9%E3%81%AB%E5%AF%BE%E5%BF%9C%E3%81%99%E3%82%8B)
+- 該当コミット:
+  - https://github.com/rui314/chibicc/commit/004b0fd8d230352fda871fe5badd80ff92c4068c
+
+この段階のリファレンス実装の出力はこんな感じ。
+
+```sh
+$ ./chibicc "main() { 0; }"
+.intel_syntax noprefix
+.global main
+main:
+  push rbp
+  mov rbp, rsp
+  sub rsp, 0
+  push 0
+  add rsp, 8
+.Lreturn.main:
+  mov rsp, rbp
+  pop rbp
+  ret
+```
+
+手元の Rust 実装がうまく動かなくなってしまったのでデバッグする。
+手元の出力はこんな感じ。
+
+```
+$ docker compose run joe cargo run "main() { 0; }"
+   Compiling joe v0.1.0 (/home/user/joe)
+    Finished dev [unoptimized + debuginfo] target(s) in 3.31s
+     Running `target/debug/joe 'main() { 0; }'`
+.global main
+main:
+  push rbp
+  mov rbp, rsp
+  sub rsp, 0
+  push 0
+.Lreturn.main:
+  mov rsp, rbp
+  pop rbp
+  ret
+```
+
+`.intel_syntax noprefix` が足りていない。これは Intel 記法を使用することを指すディレクティブ。
+
+AT&T 記法との主な差:
+
+- オペランドの順番がディスティネーション、ソースの順番になる (AT&T はソース、ディスティネントの順)
+- レジスタ名はそのまま使用する (AT&T は%プレフィックス)
+- メモリアクセスに[]を使う (AT&T は())
+- 即値には$プレフィックスを付けない (AT&T は付ける)
+
+cf. [ステップ 1：整数 1 個をコンパイルする言語の作成](https://www.sigbus.info/compilerbook#%E3%82%B9%E3%83%86%E3%83%83%E3%83%971%E6%95%B4%E6%95%B01%E5%80%8B%E3%82%92%E3%82%B3%E3%83%B3%E3%83%91%E3%82%A4%E3%83%AB%E3%81%99%E3%82%8B%E8%A8%80%E8%AA%9E%E3%81%AE%E4%BD%9C%E6%88%90)
+
+`main() { a=3; z=5; return a+z; } => 8 expected, but got 10`
+
+<details>
+<summary>expected</summary>
+
+```
+$ ./chibicc "main() { a=3; z=5; return a+z; }"
+.intel_syntax noprefix
+.global main
+main:
+  push rbp
+  mov rbp, rsp
+  sub rsp, 16
+  lea rax, [rbp-16]
+  push rax
+  push 3
+  pop rdi
+  pop rax
+  mov [rax], rdi
+  push rdi
+  add rsp, 8
+  lea rax, [rbp-8]
+  push rax
+  push 5
+  pop rdi
+  pop rax
+  mov [rax], rdi
+  push rdi
+  add rsp, 8
+  lea rax, [rbp-16]
+  push rax
+  pop rax
+  mov rax, [rax]
+  push rax
+  lea rax, [rbp-8]
+  push rax
+  pop rax
+  mov rax, [rax]
+  push rax
+  pop rdi
+  pop rax
+  add rax, rdi
+  push rax
+  pop rax
+  jmp .Lreturn.main
+.Lreturn.main:
+  mov rsp, rbp
+  pop rbp
+  ret
+```
+
+</details>
+
+<details>
+<summary>actual</summary>
+
+```
+docker compose run joe cargo run "main() { a=3; z=5; return a+z; }"
+   Compiling joe v0.1.0 (/home/user/joe)
+    Finished dev [unoptimized + debuginfo] target(s) in 2.08s
+     Running `target/debug/joe 'main() { a=3; z=5; return a+z; }'`
+.intel_syntax noprefix
+.global main
+main:
+  push rbp
+  mov rbp, rsp
+  sub rsp, 16
+  mov rax, rbp
+  sub rax, 0
+  push rax
+  push 3
+  pop rdi
+  pop rax
+  mov [rax], rdi
+  push rdi
+  mov rax, rbp
+  sub rax, 0
+  push rax
+  push 5
+  pop rdi
+  pop rax
+  mov [rax], rdi
+  push rdi
+  mov rax, rbp
+  sub rax, 0
+  push rax
+  pop rax
+  mov rax, [rax]
+  push rax
+  mov rax, rbp
+  sub rax, 0
+  push rax
+  pop rax
+  mov rax, [rax]
+  push rax
+  pop rdi
+  pop rax
+  add rax, rdi
+  push rax
+  pop rax
+  jmp .Lreturn.main
+.Lreturn.main:
+  mov rsp, rbp
+  pop rbp
+  ret
+```
+
+</details>
+
+TODO: ローカル変数の扱い
