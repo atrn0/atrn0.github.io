@@ -83,21 +83,21 @@ https://github.com/open-webui/open-webui
 ```yaml
 services:
     ollama:
-    image: ollama/ollama:rocm
-    devices:
-        - /dev/kfd:/dev/kfd
-        - /dev/dri:/dev/dri
-    volumes:
-        - ollama:/root/.ollama
-    environment:
-        - HSA_OVERRIDE_GFX_VERSION=9.0.0
-openwebui:
-    image: ghcr.io/open-webui/open-webui:main
-    volumes:
-        - open-webui:/app/backend/data
-    environment:
-        - PORT=8080
-        - OLLAMA_BASE_URL=http://localhost:11434
+        image: ollama/ollama:rocm
+        devices:
+            - /dev/kfd:/dev/kfd
+            - /dev/dri:/dev/dri
+        volumes:
+            - ollama:/root/.ollama
+        environment:
+            - HSA_OVERRIDE_GFX_VERSION=9.0.0
+    openwebui:
+        image: ghcr.io/open-webui/open-webui:main
+        volumes:
+            - open-webui:/app/backend/data
+        environment:
+            - PORT=8080
+            - OLLAMA_BASE_URL=http://localhost:11434
 volumes:
     open-webui:
     ollama:
